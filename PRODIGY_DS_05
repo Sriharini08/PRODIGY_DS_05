@@ -1,0 +1,43 @@
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Load the dataset
+data = pd.read_csv("us-accident-eda.csv")
+
+# Extract relevant columns
+relevant_columns = ['Severity', 'Start_Time', 'Temperature(F)', 'Weather_Condition', 'Road_Conditions', 'Visibility(mi)', 'Sunrise_Sunset']
+accident_data = data[relevant_columns]
+
+# Convert Start_Time to datetime
+accident_data['Start_Time'] = pd.to_datetime(accident_data['Start_Time'])
+
+# Extract hour of the day from Start_Time
+accident_data['Hour'] = accident_data['Start_Time'].dt.hour
+
+# Visualize accident frequency by hour of the day
+plt.figure(figsize=(10, 6))
+sns.countplot(x='Hour', data=accident_data, palette='viridis')
+plt.title('Accident Frequency by Hour of the Day')
+plt.xlabel('Hour of the Day')
+plt.ylabel('Accident Frequency')
+plt.xticks(rotation=45)
+plt.show()
+
+# Visualize accident hotspots by latitude and longitude
+plt.figure(figsize=(10, 6))
+sns.scatterplot(x='Start_Lat', y='Start_Lng', data=data, alpha=0.5)
+plt.title('Accident Hotspots')
+plt.xlabel('Latitude')
+plt.ylabel('Longitude')
+plt.show()
+
+# Visualize accident severity by weather condition
+plt.figure(figsize=(10, 6))
+sns.countplot(x='Weather_Condition', hue='Severity', data=accident_data, palette='coolwarm')
+plt.title('Accident Severity by Weather Condition')
+plt.xlabel('Weather Condition')
+plt.ylabel('Accident Frequency')
+plt.xticks(rotation=45)
+plt.legend(title='Severity')
+plt.show()
